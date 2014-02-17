@@ -1,0 +1,811 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Approximate Counting Using Stratified Sampling
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+In analytics databases, one of the most important queries that should return
+ quickly is the count.
+ One method of approximating counts in a single table is by sampling.
+ Let the total number of rows in a table be 
+\begin_inset Formula $N$
+\end_inset
+
+, and let's say 
+\begin_inset Formula $p$
+\end_inset
+
+ proportion of these examples satisfy some predicate.
+ Since we assume we always have access to 
+\begin_inset Formula $N$
+\end_inset
+
+, if we know with high probability
+\begin_inset Formula $p\in[\hat{p}-\epsilon,\hat{p}+\epsilon]$
+\end_inset
+
+, then we also know the number of rows matching the query, 
+\begin_inset Formula $Np\in[N\hat{p}-N\epsilon,N\hat{p}+N\epsilon]$
+\end_inset
+
+ with high probability.
+ From now on, we'll only talk about approximating 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Sample until h_stop.
+ 
+\end_layout
+
+\begin_layout Standard
+Three cases:
+\end_layout
+
+\begin_layout Itemize
+crossover >> h_stop: We've reached the stopping point at h_stop! 
+\end_layout
+
+\begin_layout Itemize
+h_stop >> crossover: empirical term dominates from now on (due to $
+\backslash
+frac{1}{
+\backslash
+sqrt{t}}$ factor).
+ We found a way to choose $t$ in such a case.
+ 
+\end_layout
+
+\begin_layout Itemize
+h_stop ~ crossover: this is difficult
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Formalize the problem (minimize 
+\begin_inset Formula $loss\left(\vec{t}\right)$
+\end_inset
+
+, such that total error bound 
+\begin_inset Formula $\leq\epsilon$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Talk about what Akshay's result states
+\end_layout
+
+\begin_layout Plain Layout
+Section 1: Simulated Results.
+ Break these simulations into cases.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+Section 2: Optimal allocation, assuming prior term in bernstein is small
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Simulated Results
+\end_layout
+
+\begin_layout Standard
+See simulated_results.txt for more detailed numbers used in this discussion.
+ For even more details, see Online_Stratified_Sampling_Simulations.ipynb.
+ 
+\end_layout
+
+\begin_layout Section
+Dynamic vs.
+ Static Allocation of 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ to Strata
+\end_layout
+
+\begin_layout Standard
+Recall the empirical bernstein bound: with probability 
+\begin_inset Formula $1-\delta$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon_{t}=_{def}|\hat{\mu_{t}}-\mu|\leq\frac{\frac{5}{6}C_{\delta}}{t-C_{\delta}}+\hat{\sigma_{t}}\sqrt{\frac{C_{\delta}}{t-C_{\delta}}}$
+\end_inset
+
+ simultaneously for all 
+\begin_inset Formula $t>C_{\delta}$
+\end_inset
+
+.
+ Let's compare the two parts of the error bound: 
+\begin_inset Formula $h_{t}=\frac{\frac{5}{6}C_{\delta}}{t-C_{\delta}}$
+\end_inset
+
+ and 
+\begin_inset Formula $e_{t}=\hat{\sigma_{t}}\sqrt{\frac{C_{\delta}}{t-C_{\delta}}}$
+\end_inset
+
+.
+ Since for 
+\begin_inset Formula $t\rightarrow\infty$
+\end_inset
+
+ 
+\begin_inset Formula $\hat{\sigma_{t}}\rightarrow\sqrt{p(1-p)}$
+\end_inset
+
+, for small 
+\begin_inset Formula $p$
+\end_inset
+
+ 
+\begin_inset Formula $e_{t}$
+\end_inset
+
+ can be smaller than 
+\begin_inset Formula $h_{t}$
+\end_inset
+
+.
+ However, 
+\begin_inset Formula $h_{t}\sim\frac{1}{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $e_{t}\sim\frac{1}{\sqrt{t}}$
+\end_inset
+
+ for large 
+\begin_inset Formula $t$
+\end_inset
+
+, so 
+\begin_inset Formula $e_{t}$
+\end_inset
+
+ eventually dominates.
+ 
+\end_layout
+
+\begin_layout Standard
+In the following discussion we'll assume 
+\begin_inset Formula $p$
+\end_inset
+
+ is relatively large, so that the 
+\begin_inset Formula $e_{t}$
+\end_inset
+
+ term of the error bound dominates, and we can ignore 
+\begin_inset Formula $h_{t}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+We'll assume from now on that 
+\begin_inset Formula $\epsilon_{t}\approx e_{t}\sim\sqrt{\frac{p(1-p)}{t}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Let's say we have 
+\begin_inset Formula $N$
+\end_inset
+
+ rows total in a database table, and these are partitioned into 
+\begin_inset Formula $k$
+\end_inset
+
+ sets of rows 
+\begin_inset Formula $i=\{1,...k\}$
+\end_inset
+
+ with 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ rows per partition.
+ In each partition, 
+\begin_inset Formula $p_{i}$
+\end_inset
+
+ proportion of the rows match a particular query.
+ So 
+\begin_inset Formula $p_{i}n_{i}$
+\end_inset
+
+ rows in partition 
+\begin_inset Formula $i$
+\end_inset
+
+ match the query.
+ 
+\end_layout
+
+\begin_layout Standard
+We'll sample 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ rows with replacement from each partition: iid from the distribution defined
+ by the 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ rows in that partition.
+ Then based on our assumption that 
+\begin_inset Formula $\epsilon_{t}\approx\frac{\sqrt{p(1-p)}}{t}$
+\end_inset
+
+, the total error in our estimation of 
+\begin_inset Formula $p=\sum_{i}\frac{n_{i}}{N}p_{i}$
+\end_inset
+
+ is 
+\begin_inset Formula $\sum_{i}\frac{n_{i}}{N}\epsilon_{t_{i}}^{i}\approx\sum_{i}\frac{n_{i}}{N}\sqrt{\frac{p(1-p)}{t_{i}}}$
+\end_inset
+
+.
+ The total number of samples used is 
+\begin_inset Formula $\sum_{i}t_{i}$
+\end_inset
+
+.
+ Then we might want to minimize the cost 
+\begin_inset Formula $\sum_{i}t_{i}$
+\end_inset
+
+ such that we obtain 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-accuracy, so 
+\begin_inset Formula $\sum_{i}\frac{n_{i}}{N}\sqrt{\frac{p(1-p)}{t_{i}}}\leq\epsilon$
+\end_inset
+
+.
+ In a distributed environment, we might not always be interested in the
+ total cost 
+\begin_inset Formula $\sum_{i}t_{i}$
+\end_inset
+
+, but in the most samples needed per partition, 
+\begin_inset Formula $max_{i}t_{i}$
+\end_inset
+
+.
+ An objective that generalizes these cases, and allows a balance between
+ the two, is the 
+\begin_inset Formula $L_{\alpha}$
+\end_inset
+
+-norm of 
+\begin_inset Formula $\vec{t}$
+\end_inset
+
+.
+ This is defined as 
+\begin_inset Formula $\left\Vert \vec{t}\right\Vert _{\alpha}=\left(\sum_{i}t_{i}^{\alpha}\right)^{1/\alpha}$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha\geq1$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $\alpha\rightarrow\infty$
+\end_inset
+
+ this gives the max norm, and for 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+ this is 
+\begin_inset Formula $\sum_{i}t_{i}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In the next sections we compare methods of allocating 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ to partitions under these assumptions and definitions of objectives/constraints.
+ We show that the optimal allocation performs significantly better than
+ locally allocating samples to partitions, for some choices of 
+\begin_inset Formula $\vec{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Optimal Dynamic Loss, for 
+\begin_inset Formula $L_{\alpha}$
+\end_inset
+
+-loss on <#samples per strata> vector
+\end_layout
+
+\begin_layout Standard
+Here is the optimization problem formulated in the previous section:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{array}{cc}
+min & \left\Vert \vec{t}\right\Vert _{\alpha},\alpha\geq1\\
+s.t. & \sum_{i}a_{i}\frac{1}{\sqrt{t_{i}}}\leq b
+\end{array}\sim\begin{array}{cc}
+min & \sum_{i}t_{i}^{\alpha},\alpha\geq1\\
+s.t. & \sum_{i}a_{i}\frac{1}{\sqrt{t_{i}}}\leq b
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Formula $a_{i}=_{def}n_{i}\sqrt{p_{i}(1-p_{i})}$
+\end_inset
+
+, and 
+\begin_inset Formula $b_{i}=N\epsilon$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Using a variable substitition:
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+\sim_{x=\frac{1}{\sqrt{t_{i}}}}\begin{array}{cc}
+min & \sum_{i}\frac{1}{x_{i}^{2\alpha}},\alpha\geq1\\
+s.t. & \sum_{i}a_{i}x_{i}\leq b
+\end{array}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can directly solve for the KKT conditions of the above program, to get
+ 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{2\alpha}{x_{i}^{2\alpha+1}}=\lambda a_{i}\sim x_{i}^{2\alpha+1}=\frac{2\alpha}{\lambda a_{i}}\sim x_{i}=\sqrt[2\alpha+1]{\frac{2\alpha}{\lambda a_{i}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sum_{i}a_{i}x_{i}=b\sim\sum_{i}a_{i}\left(\sqrt[2\alpha+1]{\frac{2\alpha}{\lambda a_{i}}}\right)=b\sim\sqrt[2\alpha+1]{\frac{1}{\lambda}}\sqrt[2\alpha+1]{2\alpha}\sum_{i}a_{i}^{1-\frac{1}{2\alpha+1}}=b
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lambda=2\alpha\left(\frac{1}{b}\right)^{2\alpha+1}\left(\sum_{i}a_{i}^{\frac{2\alpha}{2\alpha+1}}\right)^{2\alpha+1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x_{i}^{*}=\frac{b}{\left(\sum_{j}a_{j}^{\frac{2\alpha}{2\alpha+1}}\right)\sqrt[2\alpha+1]{a_{i}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, plugging 
+\begin_inset Formula $x^{*}$
+\end_inset
+
+ back into the objective 
+\begin_inset Formula $f(x^{*})$
+\end_inset
+
+, we get the optimal sample-cost.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+f(x^{*})=\left\Vert \vec{t}\right\Vert _{\alpha}=\left(\sum_{i}\frac{1}{x_{i}^{2\alpha}}\right)^{1/\alpha}=\left(\left(\sum_{i}a_{i}^{\frac{2\alpha}{2\alpha+1}}\right)^{2\alpha}\sum_{i}\frac{a_{i}^{\frac{2\alpha}{2\alpha+1}}}{b^{2\alpha}}\right)^{1/\alpha}=\left(\frac{1}{b^{2\alpha}}\left(\sum_{i}a_{i}^{\frac{2\alpha}{2\alpha+1}}\right)^{2\alpha+1}\right)^{1/\alpha}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\left(\sum_{i}\left(a_{i}^{2}\right)^{\frac{\alpha}{2\alpha+1}}\right)^{\frac{2\alpha+1}{\alpha}}}{b^{2}}=\frac{\left\Vert \vec{a}^{2}\right\Vert _{\alpha/(2\alpha+1)}}{b^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Loss of Static Sample Allocation, for 
+\begin_inset Formula $L_{\alpha}$
+\end_inset
+
+-loss on <#samples per partition> vector
+\end_layout
+
+\begin_layout Standard
+In the optimal allocation of samples to partitions above, we chose 
+\begin_inset Formula $\vec{t}$
+\end_inset
+
+, knowing 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+ ahead of time.
+ Usually we don't know this, and so allocate samples based solely on the
+ proportion of rows in that partition.
+ An additional benefit of this method: this allows for communication-free
+ parallel sampling in each partition.
+ Each partition (let's say each corresponds to a compute node) is given
+ an 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+.
+ It then samples until 
+\begin_inset Formula $\epsilon_{t}\leq\epsilon_{i}$
+\end_inset
+
+, then stops and returns.
+ We choose each 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+ such that the overall error is bounded by 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+.
+ This gives us:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\sum_{i}\frac{n_{i}}{N}\epsilon_{i}=\epsilon$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon_{i}=\frac{N}{kn_{i}}\epsilon=\sqrt{\frac{p_{i}(1-p_{i})}{t_{i}}}=\sqrt{p_{i}(1-p_{i})}x_{i}$
+\end_inset
+
+.
+ Then 
+\begin_inset Formula $x_{i}=\frac{N\epsilon}{kn_{i}\sqrt{p_{i}(1-p_{i})}}=\frac{b}{ka_{i}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And plugging the solution into the objective yields:
+\end_layout
+
+\begin_layout Standard
+Then 
+\begin_inset Formula $f(x^{local})=\left\Vert \left(\vec{t}\right)\right\Vert _{\alpha}=\left\Vert \left(\begin{array}{c}
+\frac{1}{x_{1}^{2}}\\
+\vdots\\
+\frac{1}{x_{k}^{2}}
+\end{array}\right)\right\Vert _{\alpha}=\left(\sum_{i}\frac{1}{x_{i}^{2\alpha}}\right)^{1/\alpha}=\left(\sum_{i}\frac{k^{2\alpha}a_{i}^{2\alpha}}{b^{2\alpha}}\right)^{1/\alpha}=\frac{k^{2}}{b^{2}}\left(\sum_{i}\left(a_{i}^{2}\right)^{\alpha}\right)^{1/\alpha}=\frac{k^{2}}{b^{2}}\left\Vert \vec{a}^{2}\right\Vert _{\alpha}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+Improvement Ratio
+\end_layout
+
+\begin_layout Standard
+For different 
+\begin_inset Formula $\vec{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+, we compare the sampling performance of the optimal and local methods above.
+ We do this by analyzing the ratio of the sampling performance:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+g_{k}(\vec{a})=\frac{f\left(x^{local}\right)}{f\left(x^{*}\right)}=\frac{\frac{k^{2}}{b^{2}}\left\Vert \vec{a}^{2}\right\Vert _{\alpha}}{\frac{\left\Vert \vec{a}^{2}\right\Vert _{\alpha/(2\alpha+1)}}{b^{2}}}=\frac{k^{2}\left\Vert \vec{a}^{2}\right\Vert _{\alpha}}{\left\Vert \vec{a}^{2}\right\Vert _{\alpha/(2\alpha+1)}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We know that for 
+\begin_inset Formula $\gamma>\beta>0$
+\end_inset
+
+, 
+\begin_inset Formula $\left\Vert \vec{y}^{2}\right\Vert _{\gamma}\leq\left\Vert \vec{y}^{2}\right\Vert _{\beta}$
+\end_inset
+
+.
+ Equality is obtained when 
+\begin_inset Formula $\vec{y}=\left(\begin{array}{c}
+\begin{array}{c}
+1\\
+0\\
+0
+\end{array}\\
+\vdots\\
+0
+\end{array}\right)$
+\end_inset
+
+ since 
+\begin_inset Formula $\left(1^{\gamma}\right)^{1/\gamma}=\left(1^{\beta}\right)^{1/\beta}=1$
+\end_inset
+
+, and 
+\begin_inset Formula $\frac{\left\Vert \vec{y}^{2}\right\Vert _{\gamma}}{\left\Vert \vec{y}^{2}\right\Vert _{\beta}}$
+\end_inset
+
+ is minimized when 
+\begin_inset Formula $\vec{y}=\vec{1}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In this case, 
+\begin_inset Formula $\left\Vert \vec{y}^{2}\right\Vert _{\gamma}=k^{1/\gamma}$
+\end_inset
+
+ and 
+\begin_inset Formula $\left\Vert \vec{y}^{2}\right\Vert _{\beta}=k^{1/\beta}$
+\end_inset
+
+, so 
+\begin_inset Formula 
+\[
+\frac{\left\Vert \vec{y}^{2}\right\Vert _{\gamma}}{\left\Vert \vec{y}^{2}\right\Vert _{\beta}}(min)=k^{\frac{1}{\gamma}-\frac{1}{\beta}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using these facts above (
+\begin_inset Formula $\gamma=\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta=\frac{\alpha}{2\alpha+1}$
+\end_inset
+
+), we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+g_{k}^{min}=k^{2}k^{\frac{1}{\alpha}-\frac{2\alpha+1}{\alpha}}=k^{2+\frac{1}{\alpha}-2-\frac{1}{\alpha}}=1
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and 
+\begin_inset Formula 
+\[
+g_{k}^{max}=\frac{k^{2}1}{1}=k^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Intuition for Max Norm (
+\begin_inset Formula $\alpha=\infty$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+One might guess that the 
+\end_layout
+
+\begin_layout Standard
+The local allocation for the max norm doesn't perform as well.
+ The optimal allocation is uniform *time*, not uniform 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_body
+\end_document

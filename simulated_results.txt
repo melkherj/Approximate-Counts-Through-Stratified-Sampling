@@ -1,0 +1,83 @@
+'delta' gives the probability the final confidence interval won't hold
+'epsilon_final' gives the width of the confidence interval on the final approximate count
+'ns' the number of items (table rows) in each partition of the table
+'ps' defines a bernouli distribution for each partition, giving the proportion of each partition 
+  that matches some particular query Q. 
+  Note: p does not necessarily need to sum to 1
+For the following, we've fixed delta=0.05, final accuracy = epsilon = 0.01
+
+
+### Using suboptimal, local allocation of epsilon to partitions ###
+
+ns: 10/10
+ps: 0.01/0.99
+Uniform sampling stoptime: 86036
+Partition 0/1 stoptimes: 8854/9047
+Max/total stoptime: 9047/17901
+Estimated ps for partitions 0/1: 0.010/0.990
+Max time improvement ratio: 9.510
+
+
+ns: 1000/10
+ps: 0.01/0.99
+Uniform sampling stoptime: 10531
+Partition 0/1 stoptimes: 25389/120
+Max/total stoptime: 25389/25509
+Estimated ps for partitions 0/1: 0.010/0.967
+Max time improvement ratio: 0.415
+
+
+ns: 10/10
+ps: 0.00/0.99
+Uniform sampling stoptime: 86029
+Partition 0/1 stoptimes: 3190/9015
+Max/total stoptime: 9015/12205
+Estimated ps for partitions 0/1: 0.000/0.990
+Max time improvement ratio: 9.543
+
+
+ns: 10/10
+ps: 0.10/0.10
+Uniform sampling stoptime: 34080
+Partition 0/1 stoptimes: 40235/40269
+Max/total stoptime: 40269/80504
+Estimated ps for partitions 0/1: 0.100/0.100
+Max time improvement ratio: 0.846
+
+
+### Using approximately optimal (for max time) allocation of epsilon to partitions ###
+
+ns: 10/10
+ps: 0.01/0.99
+Uniform sampling stoptime: 86037
+Partition 0/1 stoptimes: 9110/9234
+Max/total stoptime: 9234/18344
+Estimated ps for partitions 0/1: 0.010/0.989
+Max time improvement ratio: 9.317
+
+
+ns: 1000/10
+ps: 0.01/0.99
+Uniform sampling stoptime: 11034
+Partition 0/1 stoptimes: 9172/792
+Max/total stoptime: 9172/9964
+Estimated ps for partitions 0/1: 0.009/0.996
+Max time improvement ratio: 1.203
+
+
+ns: 10/10
+ps: 0.00/0.99
+Uniform sampling stoptime: 86028
+Partition 0/1 stoptimes: 5291/5718
+Max/total stoptime: 5718/11009
+Estimated ps for partitions 0/1: 0.000/0.989
+Max time improvement ratio: 15.045
+
+
+ns: 10/10
+ps: 0.10/0.10
+Uniform sampling stoptime: 34408
+Partition 0/1 stoptimes: 39967/39880
+Max/total stoptime: 39967/79847
+Estimated ps for partitions 0/1: 0.099/0.099
+Max time improvement ratio: 0.861
