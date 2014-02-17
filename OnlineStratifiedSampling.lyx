@@ -101,21 +101,21 @@ In analytics databases, one of the most important queries that should return
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 Sample until h_stop.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 Three cases:
 \end_layout
 
-\begin_layout Itemize
-crossover >> h_stop: We've reached the stopping point at h_stop! 
+\begin_layout LyX-Code
+    crossover >> h_stop: We've reached the stopping point at h_stop! 
 \end_layout
 
-\begin_layout Itemize
-h_stop >> crossover: empirical term dominates from now on (due to $
+\begin_layout LyX-Code
+    h_stop >> crossover: empirical term dominates from now on (due to $
 \backslash
 frac{1}{
 \backslash
@@ -124,8 +124,8 @@ sqrt{t}}$ factor).
  
 \end_layout
 
-\begin_layout Itemize
-h_stop ~ crossover: this is difficult
+\begin_layout LyX-Code
+    h_stop ~ crossover: this is difficult
 \end_layout
 
 \begin_layout Standard
