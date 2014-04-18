@@ -1,0 +1,114 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\kl}[2] { \texttt{KL}(#1 \| #2) }
+\newcommand{\logfrac}[2] { \texttt{log}\left(\frac{#1}{#2}\right)  }
+\newcommand{\dq} { \frac{d}{dq}  }
+\newcommand{\dnq}[1] { \frac{d^{#1}}{dq^{#1}} }
+
+\begin{document}
+
+\title{A Tight Quadratic Lower-Bound on the KL-Divergence}
+\maketitle
+
+\section{Motivation}
+We have the following concentration bound for bernoulli trials (Sanov's Bound):
+Let $X ~ \texttt{bernoulli}(p)$, and take $n$ iid samples $X_1,...X_n$ from $X$.  
+Let $\hat{p} =_{def} \frac{1}{n}\sum_{i=1}^n{X_i}$ be the estimate for $p$ based on these trials.  
+
+Then for any $q > p$, we have the following variant of Sanov's Bound:
+$$P(\hat{p} > q) \leq e^{- n \kl{q}{p}}$$
+
+If we have some lower bound $ \alpha_p (q-p)^2 \leq \kl{q}{p} $, we can 
+re-write the bound as:
+$$P(\hat{p} > q) \leq e^{- n \alpha_p \epsilon^2}$$
+where $\epsilon =_{def} (q-p) > 0$.
+
+Let's say for $q < p$, we want $P(\hat{p} < q)$.  Let $q' =_{def} 1-q$ and 
+$p' =_{def} 1 - p$, and $\hat{p'} = 1 - \hat{p}$.  Then we have 
+
+$$P(\hat{p'} > q') \leq e^{- n \alpha_{p'} (q' - p')^2}$$
+
+from above, which is equivalent to 
+
+$$P(\hat{p} < q) \leq e^{- n \alpha_{1-p} \epsilon^2}$$
+
+Combining these, we have the following two-tailed bound:
+\[
+P(|\hat{p} - p| > \epsilon) \leq e^{- n \alpha_{1-p} \epsilon^2} + 
+e^{- n \alpha_{p} \epsilon^2} 
+\leq 
+2 e^{- n \texttt{min}(\alpha_{p},\alpha_{1-p}) \epsilon^2} 
+\]
+
+\section{Proposition}
+Define $\forall q\in(0,1), p\in(0,1)$
+$$\kl{q}{p} = q \logfrac{q}{p} + (1-q) \logfrac{1-q}{1-p}$$
+
+For each $p$, we want the largest $\alpha$ such that $\forall q > p$, 
+$$ \alpha (q-p)^2 \leq \kl{q}{p} $$
+
+The $\alpha$ that achieves this for each $p$ is:
+
+\[
+\alpha = 
+\begin{cases}
+    \frac{  \kl{1-p}{p}  }{  (1-2p)^2  } & p < 0.5 \\
+     \frac{1}{  2p(1-p)  }                & p \geq 0.5
+\end{cases}
+\]
+
+\section{Proof}
+\subsection{Case: $p < 0.5$}
+
+For $p < 0.5$, we show that $\dq \left[ \kl{q}{p} -  \alpha(q-p)^2 \right] = 0$ if and only if
+$q \in \{p,0.5,1-p\}$
+
+Expanding/simplifying the derivative: 
+$$\dq \left[ \kl{q}{p} -  \alpha(q-p)^2 \right]$$ 
+$$ = \logfrac{q}{1-q} - \logfrac{p}{1-p} - 2\alpha(q-p)$$
+$$ = \logfrac{q}{1-q} - \logfrac{p}{1-p} - 2\frac{\logfrac{1-p}{p}}{1-2p}(q-p)$$
+since $\alpha = \frac{\kl{1-p}{p}}{(1-2p)^2} = \frac{(1-2p)\logfrac{1-p}{p}}{(1-2p)^2} = \frac{\logfrac{1-p}{p}}{1-2p}$
+$$ = \logfrac{q}{1-q} - \logfrac{p}{1-p} + 2\frac{\logfrac{p}{1-p}}{1-2p}(q-p)$$
+
+$(\rightarrow)$ PROVE THIS: there can be at most 3 roots.  
+
+$(\leftarrow)$ 
+$$\logfrac{q}{1-q} - \logfrac{p}{1-p} + 2\frac{\logfrac{p}{1-p}}{1-2p}(q-p) = $$
+($q=p$)
+$$\logfrac{p}{1-p} - \logfrac{p}{1-p} = 0$$
+($q=1/2$)
+$$\logfrac{1/2}{1/2} - \logfrac{p}{1-p} + 2\frac{\logfrac{p}{1-p}}{1-2p}(1/2-p) = $$
+$$-\logfrac{p}{1-p} + \frac{\logfrac{p}{1-p}}{1-2p}(1-2p) = $$
+$$-\logfrac{p}{1-p} + \logfrac{p}{1-p} = 0$$
+($q=1-p$)
+$$\logfrac{1-p}{p} - \logfrac{p}{1-p} + 2\frac{\logfrac{p}{1-p}}{1-2p}(1-2p)$$
+$$ = -2\logfrac{p}{1-p} + 2\logfrac{p}{1-p} = 0$$
+
+This imples that the minimum of $\kl{q}{p} -  \alpha(q-p)^2$ must be at one of the points $q \in \{p,0.5,1-p,1\}$.  Since all of these points are nonnegative, we have $\kl{q}{p} -  \alpha(q-p)^2 \geq 0$ and $\kl{q}{p} \geq \alpha(q-p)^2$.  
+
+\subsection{Case: $p \geq 0.5$}
+\textbf{\textit{$\alpha = \frac{1}{2p(1-p)}$ is sufficient.}}
+
+We want to show for $p > 0.5$, 
+
+$$\kl{q}{p} \geq \frac{(q-p)^2}{p(1-p)}$$  
+
+At $q=p$, the values and derivatives at both sides are equal to 0.  We will show that on $q > p$, the second derivative is strictly positive, and 0 $q=p$.  
+
+For $q > p > 1/2$, $q(1-q) < p(1-p)$.  This is since $\frac{d}{dx} x(1-x) = 1-2x < 0$ for $x > 1/2$.  
+Then 
+$$\dnq{2} \kl{q}{p} = \frac{1}{q(1-q)} > \frac{1}{p(1-p)} = \dnq{2} \frac{(q-p)^2}{p(1-p)}$$ 
+for $q > p > 1/2$
+
+\textbf{\textit{$\alpha = \frac{1}{2p(1-p)}$ is optimal.}}
+Take some $\alpha > \frac{1}{2p(1-p)}$.  Then at $q=p$, the values/derivatives are equal, except the second derivative of the kl function is strictly larger than the second derivative of the quadratic function.  Thus for small enough $\epsilon$, $\kl{p+\epsilon}{p} > \alpha(p+\epsilon-p)^2$
+
+\subsection{Useful Facts}
+$$\dq \kl{q}{p} = \logfrac{q}{1-q} - \logfrac{p}{1-p}$$
+$$\dnq{2} \kl{q}{p} = \frac{1}{q(1-q)}$$
+$$\kl{1-p}{p} = (1-2p) \logfrac{1-p}{p}$$
+
+\end{document}

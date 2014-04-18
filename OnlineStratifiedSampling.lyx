@@ -64,6 +64,77 @@ Approximate Counting Using Stratified Sampling
 \end_layout
 
 \begin_layout Section
+Two Steps
+\end_layout
+
+\begin_layout Standard
+Let's say we want to attain desired accuracy 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+, and error bound for strata 
+\begin_inset Formula $i$
+\end_inset
+
+ is given by 
+\begin_inset Formula $\epsilon_{i}(t)=\frac{a}{t}+\frac{b_{i}}{\sqrt{t}}=ax^{2}+b_{i}x$
+\end_inset
+
+, 
+\begin_inset Formula $i\in\{1,...k\}$
+\end_inset
+
+, 
+\begin_inset Formula $x=\frac{1}{\sqrt{t}}$
+\end_inset
+
+.
+ We don't usually know 
+\begin_inset Formula $b_{i}$
+\end_inset
+
+ ahead of time, and 
+\begin_inset Formula $b_{i}$
+\end_inset
+
+ varies as a function of 
+\begin_inset Formula $t$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Assuming 
+\begin_inset Formula $a=0$
+\end_inset
+
+.
+ Even if 
+\begin_inset Formula $b_{i}=0$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Itemize
+For every 
+\begin_inset Formula $i$
+\end_inset
+
+, 
+\begin_inset Formula $t_{i}\ge\frac{a}{\epsilon}\iff x_{i}\leq\sqrt{\frac{\epsilon}{a}}$
+\end_inset
+
+ to satisfy 
+\begin_inset Formula $\sum_{i}\epsilon_{i}(t_{i})\leq\epsilon$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
 Introduction
 \end_layout
 
